@@ -24,7 +24,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
     private fun getContributionYears(user: String): ArrayList<String> {
 
-        val doc = Jsoup.connect("https://github.com/$user").userAgent("Mozilla").timeout(10000).get()
+        val doc = Jsoup.connect("https://github.com/$user").userAgent("Mozilla").timeout(10000).ignoreHttpErrors(true).get()
         val years = doc.select(".js-year-link")
         val yearLinkList = arrayListOf<String>()
 
@@ -39,7 +39,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
         for (yearLink in yearLinkList) {
 
-            val doc = Jsoup.connect("https://github.com$yearLink").get()
+            val doc = Jsoup.connect("https://github.com$yearLink").ignoreHttpErrors(true).get()
 
             val contributionText =
                     doc.select(".js-yearly-contributions h2").text()
@@ -54,7 +54,6 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
             val year = contributionText[1] // 2020, 2019 ...
             val total = Integer.parseInt(contributionText[0]) // 550, 140 ...
-
 
 
             val contributions = doc.select("rect.day")
