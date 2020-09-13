@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = ["/user"])
+@RequestMapping(value = ["/"])
 class GithubContributionController(private val githubContributionService: GithubContributionService) {
 
-    @GetMapping(value = ["/{user}"])
+    @GetMapping
+    fun getDefault() = "/user/{github name}"
+
+    @GetMapping(value = ["user/{user}"])
     fun getContributions(@PathVariable("user") user: String) = githubContributionService.getContributions(user)
 }
