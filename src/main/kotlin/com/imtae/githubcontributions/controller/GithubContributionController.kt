@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = ["/"])
 class GithubContributionController(private val githubContributionService: GithubContributionService) {
 
-    @GetMapping
+    @GetMapping(value = ["", "user"])
     fun getDefault() = "/user/{github name}"
 
     @GetMapping(value = ["user/{user}"])
