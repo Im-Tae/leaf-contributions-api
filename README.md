@@ -3,10 +3,11 @@
 <p align="center">
   <a href="https://github.com/Im-Tae"><img alt="Author" src="https://img.shields.io/badge/author-Im--Tae-red.svg"/></a>
   <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
-   <a href="https://travis-ci.com/github/Im-Tae/leaf-contributions"><img alt="build" src="https://travis-ci.com/Im-Tae/leaf-contributions.svg?branch=master"/></a>
+   <a href="https://travis-ci.com/github/Im-Tae/leaf-contributions-api"><img alt="build" src="https://travis-ci.com/Im-Tae/leaf-contributions-api.svg?branch=master"/></a>
 </p>
 <p align="center">  
 A simple API that returns number of GitHub contributions</p>
+
 
 
 
