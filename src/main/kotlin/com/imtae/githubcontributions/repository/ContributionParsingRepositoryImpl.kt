@@ -6,6 +6,9 @@ import com.imtae.githubcontributions.domain.Range
 import com.imtae.githubcontributions.domain.Year
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Component
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Component
 class ContributionParsingRepositoryImpl : ContributionParsingRepository {
@@ -13,7 +16,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
     private val _yearList = arrayListOf<Year>()
     private val _contributionsList = arrayListOf<Contributions>()
 
-    override fun getContribution(user: String): Contribution {
+    override fun getContributions(user: String): Contribution {
 
         val yearList = getContributionYears(user)
         _yearList.clear()
@@ -69,12 +72,34 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
                 contributionList.add(Contributions(dataDate, Integer.parseInt(dataCount), fill))
             }
 
-            _yearList.add(Year(year, total, Range(contributionList[0].date, contributionList[contributionList.size -1].date)))
+            _yearList.add(Year(year, total, Range(contributionList[0].date!!, contributionList[contributionList.size -1].date!!)))
 
             for (contribution in contributionList)
                 _contributionsList.add(contribution)
         }
 
         return Contribution(_yearList, _contributionsList)
+    }
+
+    override fun getTodayContribution(user: String): Contributions {
+
+        val doc = Jsoup.connect("https://github.com/$user").userAgent("Mozilla").timeout(10000).ignoreHttpErrors(true).get()
+
+        val contributions = doc.select("rect.day")
+
+        val today = SimpleDateFormat("yyyy-MM-dd").format(Date())
+
+        for (contribution in contributions.indices) {
+
+            if (contributions[contribution].attr("data-date") == today) {
+
+                val fill = contributions[contribution].attr("fill")
+                val dataCount = contributions[contribution].attr("data-count")
+                val dataDate = contributions[contribution].attr("data-date")
+
+                return Contributions(dataDate, Integer.parseInt(dataCount), fill)
+            }
+        }
+        return Contributions()
     }
 }

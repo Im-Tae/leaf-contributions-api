@@ -1,6 +1,7 @@
 package com.imtae.githubcontributions.service
 
 import com.imtae.githubcontributions.domain.Contribution
+import com.imtae.githubcontributions.domain.Contributions
 import com.imtae.githubcontributions.repository.ContributionParsingRepository
 import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Element
@@ -20,11 +21,13 @@ class GithubContributionServiceImpl(private val contributionParsingRepository: C
         else {
             cacheManager.clearAll()
 
-            val contribution = contributionParsingRepository.getContribution(user)
+            val contribution = contributionParsingRepository.getContributions(user)
 
             cache.put(Element(user, contribution))
 
             contribution
         }
     }
+
+    override fun getTodayContribution(user: String): Contributions = contributionParsingRepository.getTodayContribution(user)
 }
