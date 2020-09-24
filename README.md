@@ -13,6 +13,10 @@ A simple API that returns number of GitHub contributions</p>
 
 ## Use
 
+
+
+#### All
+
 **request**
 
 ```
@@ -52,6 +56,26 @@ https://leaf-contributions.herokuapp.com/user/{github name}
     },
     ...
   ]
+}
+```
+
+
+
+#### Today
+
+**request**
+
+```
+http://leaf-contributions.herokuapp.com/user/{github name}/today
+```
+
+**receive**
+
+```json
+{
+  "date": "2020-09-24",
+  "count": 1,
+  "color": "#9be9a8"
 }
 ```
 
