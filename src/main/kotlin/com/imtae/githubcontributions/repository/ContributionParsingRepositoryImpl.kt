@@ -46,18 +46,13 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
             val contributionText =
                     doc.select(".js-yearly-contributions h2").text()
-                            .replace(" ", "")
-                            .replace(",", "")
-                            .let {
-                                if (it.contains("contributions"))
-                                    it.split("contributionsin")
-                                else
-                                    it.split("contributionin")
-                            }
+                            .replace("[ ]".toRegex(), "")
+                            .split("[a-z|A-Z]".toRegex())
 
-            val year = contributionText[1] // 2020, 2019 ...
+            println(contributionText)
+
+            val year = contributionText[contributionText.lastIndex] // 2020, 2019 ...
             val total = Integer.parseInt(contributionText[0]) // 550, 140 ...
-
 
             val contributions = doc.select("rect.day")
 
