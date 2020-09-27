@@ -29,5 +29,7 @@ class GithubContributionServiceImpl(private val contributionParsingRepository: C
         }
     }
 
+    override fun getContribution(user: String, year: String): Contributions = contributionParsingRepository.getContribution(user, year)
+
     override fun getTodayContribution(user: String): Contributions = contributionParsingRepository.getTodayContribution(user)
 }

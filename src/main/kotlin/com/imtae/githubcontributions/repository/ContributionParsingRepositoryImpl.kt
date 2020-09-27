@@ -25,6 +25,10 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
         return getContributionData(yearList)
     }
 
+    override fun getContribution(user: String, year: String): Contributions = getContributionData(user, year)
+
+    override fun getTodayContribution(user: String): Contributions = getContributionData(user)
+
     private fun getContributionYears(user: String): ArrayList<String> {
 
         val doc = Jsoup.connect("https://github.com/$user")
@@ -81,7 +85,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
         return Contribution(_yearList, _contributionsList)
     }
 
-    override fun getTodayContribution(user: String): Contributions {
+    private fun getContributionData(user: String, year: String? = null): Contributions {
 
         val currentYear = SimpleDateFormat("yyyy").format(Date())
         val todayDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
@@ -96,7 +100,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
         for (contribution in contributions.indices) {
 
-            if (contributions[contribution].attr("data-date") == todayDate) {
+            if (contributions[contribution].attr("data-date") == year ?: todayDate) {
 
                 val fill = contributions[contribution].attr("fill")
                 val dataCount = contributions[contribution].attr("data-count")

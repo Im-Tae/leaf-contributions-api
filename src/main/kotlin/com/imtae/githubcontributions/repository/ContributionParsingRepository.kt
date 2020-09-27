@@ -7,5 +7,7 @@ interface ContributionParsingRepository {
 
     fun getContributions(user: String) : Contribution
 
+    fun getContribution(user: String, year: String) : Contributions
+
     fun getTodayContribution(user: String) : Contributions
 }
