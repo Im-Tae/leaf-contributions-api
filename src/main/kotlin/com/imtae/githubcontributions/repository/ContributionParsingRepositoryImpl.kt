@@ -87,8 +87,8 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
     private fun getContributionData(user: String, year: String? = null): Contributions {
 
-        val currentYear = SimpleDateFormat("yyyy").format(Date())
-        val todayDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        val currentYear = SimpleDateFormat("yyyy").format(Calendar.getInstance().time)
+        val todayDate = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time)
 
         val doc = Jsoup.connect("https://github.com/$user?tab=overview&from=2$currentYear-01-01&to=$currentYear-12-31")
                 .userAgent("Mozilla")
