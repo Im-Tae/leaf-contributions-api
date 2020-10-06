@@ -79,6 +79,39 @@ http://leaf-contributions.herokuapp.com/user/{github name}/2020-09-28
 
 </br>
 
+#### YEAR
+
+**request**
+
+```
+http://leaf-contributions.herokuapp.com/user/{github name}/2020
+```
+
+**receive**
+
+```json
+[
+  {
+    "date": "2020-01-01",
+    "count": 2,
+    "color": "#9be9a8"
+  },
+  {
+    "date": "2020-01-02",
+    "count": 1,
+    "color": "#9be9a8"
+  },
+  {
+    "date": "2020-01-03",
+    "count": 1,
+    "color": "#9be9a8"
+  },
+  ...
+]
+```
+
+</br>
+
 #### Today
 
 **request**
