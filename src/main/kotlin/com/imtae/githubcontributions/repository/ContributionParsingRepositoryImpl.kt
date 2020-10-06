@@ -13,6 +13,12 @@ import kotlin.collections.ArrayList
 @Component
 class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
+    enum class Type {
+        DATE,
+        YEAR,
+        TODAY
+    }
+
     private val _yearList = arrayListOf<Year>()
     private val _contributionsList = arrayListOf<Contributions>()
 
@@ -25,9 +31,9 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
         return getContributionData(yearList)
     }
 
-    override fun getContribution(user: String, year: String): Contributions = getContributionData(user, year)
+    override fun getContribution(user: String, date: String): Any = getContributionData(user, date)
 
-    override fun getTodayContribution(user: String): Contributions = getContributionData(user)
+    override fun getTodayContribution(user: String): Any = getContributionData(user)
 
     private fun getContributionYears(user: String): ArrayList<String> {
 
@@ -85,30 +91,48 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
         return Contribution(_yearList, _contributionsList)
     }
 
-    private fun getContributionData(user: String, year: String? = null): Contributions {
+    private val checkDateValid = { date: String, type: Type ->
+        when {
+            date!!.matches("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])\$".toRegex()) && type == Type.DATE -> true
+            date.matches("^\\d{4}".toRegex()) && type == Type.YEAR -> true
+            else -> false
+        }
+    }
+
+    private fun getContributionData(user: String, date: String? = null): Any {
 
         val currentYear = SimpleDateFormat("yyyy").format(Calendar.getInstance().time)
         val todayDate = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time)
 
-        val doc = Jsoup.connect("https://github.com/$user?tab=overview&from=2$currentYear-01-01&to=$currentYear-12-31")
-                .userAgent("Mozilla")
-                .timeout(10000)
-                .ignoreHttpErrors(true)
-                .get()
+        val connection =
+                when {
+                    date == null || checkDateValid(date, Type.DATE) -> Jsoup.connect("https://github.com/$user?tab=overview&from=2$currentYear-01-01&to=$currentYear-12-31")
+                    checkDateValid(date, Type.YEAR) -> Jsoup.connect("https://github.com/$user?tab=overview&from=2$date-01-01&to=$date-12-31")
+                    else -> return Contributions()
+                }
+
+        val doc =
+                connection
+                        .userAgent("Mozilla")
+                        .timeout(10000)
+                        .ignoreHttpErrors(true)
+                        .get()
 
         val contributions = doc.select("rect.day")
 
+        val contributionList = arrayListOf<Contributions>()
+
         for (contribution in contributions.indices) {
 
-            if (contributions[contribution].attr("data-date") == year ?: todayDate) {
+            val fill = contributions[contribution].attr("fill")
+            val dataCount = contributions[contribution].attr("data-count")
+            val dataDate = contributions[contribution].attr("data-date")
 
-                val fill = contributions[contribution].attr("fill")
-                val dataCount = contributions[contribution].attr("data-count")
-                val dataDate = contributions[contribution].attr("data-date")
+            if (contributions[contribution].attr("data-date") == date ?: todayDate) {
 
                 return Contributions(dataDate, Integer.parseInt(dataCount), fill)
-            }
+            } else contributionList.add(Contributions(dataDate, Integer.parseInt(dataCount), fill))
         }
-        return Contributions()
+        return contributionList
     }
 }

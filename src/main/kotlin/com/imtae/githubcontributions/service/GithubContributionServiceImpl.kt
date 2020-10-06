@@ -1,7 +1,6 @@
 package com.imtae.githubcontributions.service
 
 import com.imtae.githubcontributions.domain.Contribution
-import com.imtae.githubcontributions.domain.Contributions
 import com.imtae.githubcontributions.repository.ContributionParsingRepository
 import net.sf.ehcache.CacheManager
 import net.sf.ehcache.Element
@@ -29,7 +28,7 @@ class GithubContributionServiceImpl(private val contributionParsingRepository: C
         }
     }
 
-    override fun getContribution(user: String, year: String): Contributions = contributionParsingRepository.getContribution(user, year)
+    override fun getContribution(user: String, date: String): Any = contributionParsingRepository.getContribution(user, date)
 
-    override fun getTodayContribution(user: String): Contributions = contributionParsingRepository.getTodayContribution(user)
+    override fun getTodayContribution(user: String): Any = contributionParsingRepository.getTodayContribution(user)
 }

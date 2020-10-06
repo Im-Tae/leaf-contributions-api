@@ -13,8 +13,8 @@ class GithubContributionController(private val githubContributionService: Github
     @GetMapping(value = ["user/{user}"])
     fun getContributions(@PathVariable("user") user: String) = githubContributionService.getContributions(user)
 
-    @GetMapping(value = ["user/{user}/{year}"])
-    fun getContribution(@PathVariable("user") user: String, @PathVariable("year") year: String) = githubContributionService.getContribution(user, year)
+    @GetMapping(value = ["user/{user}/{date}"])
+    fun getContribution(@PathVariable("user") user: String, @PathVariable("date") date: String) = githubContributionService.getContribution(user, date)
 
     @GetMapping(value = ["user/{user}/today"])
     fun getTodayContribution(@PathVariable("user") user: String) =githubContributionService.getTodayContribution(user)
