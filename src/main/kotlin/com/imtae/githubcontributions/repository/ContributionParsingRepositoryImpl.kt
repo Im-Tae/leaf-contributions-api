@@ -15,8 +15,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
     enum class Type {
         DATE,
-        YEAR,
-        TODAY
+        YEAR
     }
 
     private val _yearList = arrayListOf<Year>()
