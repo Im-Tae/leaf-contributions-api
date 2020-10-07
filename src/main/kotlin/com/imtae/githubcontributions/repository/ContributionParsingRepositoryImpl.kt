@@ -132,6 +132,6 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
                 return Contributions(dataDate, Integer.parseInt(dataCount), fill)
             } else contributionList.add(Contributions(dataDate, Integer.parseInt(dataCount), fill))
         }
-        return contributionList
+        return if (contributionList.size > 0) contributionList else Contributions()
     }
 }
