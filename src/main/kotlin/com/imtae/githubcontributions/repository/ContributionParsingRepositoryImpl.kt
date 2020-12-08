@@ -4,19 +4,14 @@ import com.imtae.githubcontributions.domain.Contribution
 import com.imtae.githubcontributions.domain.Contributions
 import com.imtae.githubcontributions.domain.Range
 import com.imtae.githubcontributions.domain.Year
+import com.imtae.githubcontributions.key.Type
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Component
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Component
 class ContributionParsingRepositoryImpl : ContributionParsingRepository {
-
-    enum class Type {
-        DATE,
-        YEAR
-    }
 
     private val _yearList = arrayListOf<Year>()
     private val _contributionsList = arrayListOf<Contributions>()
@@ -74,7 +69,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
             for (contribution in contributions.indices) {
 
-                val fill = contributions[contribution].attr("fill")
+                val fill = checkFillColor(contributions[contribution].attr("fill"))
                 val dataCount = contributions[contribution].attr("data-count")
                 val dataDate = contributions[contribution].attr("data-date")
 
@@ -92,7 +87,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
     private val checkDateValid = { date: String, type: Type ->
         when {
-            date!!.matches("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])\$".toRegex()) && type == Type.DATE -> true
+            date.matches("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])\$".toRegex()) && type == Type.DATE -> true
             date.matches("^\\d{4}".toRegex()) && type == Type.YEAR -> true
             else -> false
         }
@@ -123,7 +118,7 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
         for (contribution in contributions.indices) {
 
-            val fill = contributions[contribution].attr("fill")
+            val fill = checkFillColor(contributions[contribution].attr("fill"))
             val dataCount = contributions[contribution].attr("data-count")
             val dataDate = contributions[contribution].attr("data-date")
 
@@ -133,5 +128,26 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
             } else contributionList.add(Contributions(dataDate, Integer.parseInt(dataCount), fill))
         }
         return if (contributionList.size > 0) contributionList else Contributions()
+    }
+
+    private fun checkFillColor(fill: String?): String? {
+
+        return when (fill) {
+            "var(--color-calendar-graph-day-bg)" -> "#e6e8ed"
+            "var(--color-calendar-graph-day-L1-bg)" -> "#8ce797"
+            "var(--color-calendar-graph-day-L2-bg)" -> "#38bc50"
+            "var(--color-calendar-graph-day-L3-bg)" -> "#2c933d"
+            "var(--color-calendar-graph-day-L4-bg)" -> "#1d5d2b"
+            "var(--color-calendar-halloween-graph-day-l1-bg)" -> "#ffee4a"
+            "var(--color-calendar-halloween-graph-day-l2-bg)" -> "#ffc501"
+            "var(--color-calendar-halloween-graph-day-l3-bg)" -> "#fe9600"
+            "var(--color-calendar-halloween-graph-day-l4-bg)" -> "#03001c"
+            else -> fill
+        }
+    }
+
+    // 추가 예정
+    private fun changeFillColor(color: String?): String? {
+        return null
     }
 }
