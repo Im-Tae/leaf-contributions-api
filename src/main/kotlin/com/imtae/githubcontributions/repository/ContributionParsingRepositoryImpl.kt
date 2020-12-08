@@ -60,7 +60,9 @@ class ContributionParsingRepositoryImpl : ContributionParsingRepository {
 
             println(contributionText)
 
-            val year = contributionText[contributionText.lastIndex] // 2020, 2019 ...
+            println(doc.select(".js-yearly-contributions h2").text())
+
+            val year = contributionText[contributionText.lastIndex].ifBlank { SimpleDateFormat("yyyy").format(Calendar.getInstance().time) } // 2020, 2019 ...
             val total = Integer.parseInt(contributionText[0]) // 550, 140 ...
 
             val contributions = doc.select("rect.day")
